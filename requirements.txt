@@ -1,0 +1,7 @@
+lightning
+numpy
+pandas
+prophet
+pytorch-forecasting
+statsmodels
+torch
