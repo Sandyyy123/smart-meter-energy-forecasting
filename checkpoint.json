@@ -1,0 +1,25 @@
+{
+  "project_number": 16,
+  "title": "Smart Meters London - Energy Forecasting",
+  "methodology": "Time-series forecasting (energy demand, household-level): per-household SARIMA / Prophet baseline + Temporal Fusion Transformer (TFT) advanced model with quantile multi-horizon outputs.",
+  "phase": "Phase 1 - scaffolded code-only",
+  "status": {
+    "folder_structure": true,
+    "brief_written": true,
+    "dataset_downloaded": false,
+    "eda_notebook_built": true,
+    "refs_verified_count": 27,
+    "baseline_script_built": true,
+    "advanced_script_built": true,
+    "manuscript_word_count": 4133,
+    "presentation_built": true
+  },
+  "needs_main_session_execution": [
+    "notebooks/01_EDA.ipynb",
+    "src/model_baseline.py",
+    "src/model_advanced.py"
+  ],
+  "blockers": [
+    "Dataset not downloaded by scaffolding agent (1.25 GB compressed, judgment-call zone, default = document only). Kaggle CLI command in data/README.md; main session pulls on demand."
+  ]
+}

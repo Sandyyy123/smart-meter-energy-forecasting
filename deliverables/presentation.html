@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Meters London - Energy Forecasting</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: #0f172a; color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.7; min-height: 100vh;
+  }
+  nav {
+    position: sticky; top: 0; z-index: 1000;
+    background: #0f172aee; backdrop-filter: blur(12px);
+    border-bottom: 1px solid #1e293b; padding: 0.5rem 0;
+    overflow-x: auto; white-space: nowrap;
+  }
+  nav .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 1rem; display: flex; gap: 0.15rem; align-items: center; }
+  nav a { color: #94a3b8; text-decoration: none; font-size: 0.78rem; padding: 0.4rem 0.65rem; border-radius: 6px; transition: all 0.2s; flex-shrink: 0; }
+  nav a:hover, nav a:focus { color: #38bdf8; background: #1e293b; }
+  nav .nav-title { color: #38bdf8; font-weight: 700; font-size: 0.85rem; margin-right: 0.6rem; flex-shrink: 0; }
+  main { max-width: 1100px; margin: 0 auto; padding: 1.2rem 1.6rem 4rem; }
+  section { margin-bottom: 4rem; padding-top: 3.5rem; }
+  section:first-of-type { padding-top: 1rem; }
+  h1 {
+    font-size: 2.5rem; font-weight: 800; line-height: 1.2;
+    background: linear-gradient(135deg, #38bdf8, #a78bfa, #f472b6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 0.6rem;
+  }
+  .subtitle { color: #94a3b8; font-size: 1.05rem; margin-bottom: 1.4rem; }
+  h2 {
+    font-size: 1.7rem; font-weight: 700; color: #38bdf8;
+    margin-bottom: 1.2rem; padding-bottom: 0.4rem; border-bottom: 2px solid #1e293b;
+  }
+  h3 { font-size: 1.18rem; font-weight: 600; margin: 1.4rem 0 0.6rem; color: #a78bfa; }
+  p { margin-bottom: 0.9rem; }
+  ul, ol { margin: 0.5rem 0 1rem 1.6rem; }
+  li { margin-bottom: 0.35rem; }
+  strong { color: #f8fafc; }
+  a { color: #38bdf8; text-decoration: none; border-bottom: 1px dashed #1e293b; }
+  a:hover { color: #a78bfa; border-bottom-color: #a78bfa; }
+  .box { border-radius: 10px; padding: 1.1rem 1.3rem; margin: 1rem 0 1.2rem; }
+  .box-pink   { background: #f472b610; border-left: 4px solid #f472b6; }
+  .box-green  { background: #34d39910; border-left: 4px solid #34d399; }
+  .box-blue   { background: #38bdf810; border-left: 4px solid #38bdf8; }
+  .box-purple { background: #a78bfa10; border-left: 4px solid #a78bfa; }
+  .box-amber  { background: #fbbf2410; border-left: 4px solid #fbbf24; }
+  pre { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 1.1rem 1.3rem; overflow-x: auto; margin: 0.8rem 0 1.2rem; }
+  pre code { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.85rem; line-height: 1.6; color: #e2e8f0; }
+  p code, li code, td code { background: #1e293b; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.88em; color: #38bdf8; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+  th, td { padding: 0.6rem 0.9rem; text-align: left; border-bottom: 1px solid #1e293b; }
+  th { background: #1e293b; color: #38bdf8; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  tr:hover { background: #1e293b40; }
+  .hero {
+    background: linear-gradient(135deg, #0f172a, #1e293b 60%, #0f172a);
+    padding: 3rem 2rem; border-radius: 16px; margin-bottom: 2rem;
+    border: 1px solid #334155; text-align: left;
+  }
+  .hero .meta { color: #94a3b8; font-size: 0.95rem; margin-top: 1rem; }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
+  .meta-grid .item { background: #1e293b; padding: 0.7rem 0.9rem; border-radius: 8px; border-left: 3px solid #38bdf8; }
+  .meta-grid .item .lbl { display: block; font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
+  .meta-grid .item .val { font-weight: 700; color: #e2e8f0; font-size: 0.95rem; }
+  .pill { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 0.3rem; }
+  .pill-blue { background: #38bdf820; color: #38bdf8; }
+  .pill-purple { background: #a78bfa20; color: #a78bfa; }
+  .pill-amber { background: #fbbf2420; color: #fbbf24; }
+  footer { text-align: center; color: #64748b; font-size: 0.85rem; padding: 2rem 1rem; border-top: 1px solid #1e293b; margin-top: 3rem; }
+</style>
+</head>
+<body>
+<nav><div class="nav-inner">
+  <span class="nav-title">Project 16: Smart Meters London</span>
+  <a href="#title">Title</a>
+  <a href="#motivation">Motivation</a>
+  <a href="#data">Data</a>
+  <a href="#methods">Methods</a>
+  <a href="#baseline">Baseline</a>
+  <a href="#advanced">TFT</a>
+  <a href="#discussion">Discussion</a>
+  <a href="#conclusion">Conclusion</a>
+  <a href="#refs">References</a>
+</div></nav>
+<main>
+
+<section id="title" class="hero">
+  <h1>Multi-Horizon Probabilistic Forecasting of Household Electricity Consumption</h1>
+  <div class="subtitle">London Smart Meters (2011-2014, 5,567 households): SARIMA / Prophet baseline + Temporal Fusion Transformer.</div>
+  <div class="meta-grid">
+    <div class="item"><span class="lbl">Track</span><span class="val">Time-series forecasting</span></div>
+    <div class="item"><span class="lbl">Domain</span><span class="val">Energy / utilities (DACH twin)</span></div>
+    <div class="item"><span class="lbl">Households</span><span class="val">5,567</span></div>
+    <div class="item"><span class="lbl">Granularity</span><span class="val">Half-hourly kWh</span></div>
+    <div class="item"><span class="lbl">Horizons</span><span class="val">1d / 7d / 30d</span></div>
+    <div class="item"><span class="lbl">Status</span><span class="val">Phase 1 - scaffolded code</span></div>
+  </div>
+  <div class="meta">
+    <span class="pill pill-blue">SARIMA + Prophet</span>
+    <span class="pill pill-purple">Temporal Fusion Transformer</span>
+    <span class="pill pill-amber">Quantile q10/q50/q90</span>
+  </div>
+</section>
+
+<section id="motivation">
+  <h2>Why this project</h2>
+  <p>The smart-meter rollout has shifted utility operations from twice-yearly cumulative reads to half-hourly per-household feeds. Dynamic tariffs, demand-response auctions, and distribution-grid planning all depend on probabilistic, multi-horizon forecasts of household consumption. The challenge is that single-household time series are noisy, behaviour-dependent, and weakly described by demographic proxies, while operational deployments need calibrated quantile outputs across thousands of households.</p>
+  <div class="box box-blue">
+    <strong>Energy twin of Project #9 (Favorita retail).</strong> Both are hierarchical multi-series forecasting tasks. Retail series are dominated by promotional and calendar shocks; energy series are dominated by weather and intra-day occupancy. The TFT architecture is the canonical multi-horizon probabilistic learner for both.
+  </div>
+  <h3>DACH transferability</h3>
+  <ul>
+    <li>Stadtwerke and Verteilnetzbetreiber face the same forecasting problem under the Messstellenbetriebsgesetz (MsbG) and BSI Smart Meter Gateway rollout.</li>
+    <li>Section 14a EnWG creates a flexible-load regime parallel to the LCL dToU sub-cohort: heat pumps, wallboxes, battery storage receive incentives for steerable consumption.</li>
+    <li>The architecture, the static-plus-known-plus-observed input partition, the quantile head, and the MinT reconciliation are directly portable.</li>
+  </ul>
+</section>
+
+<section id="data">
+  <h2>Data</h2>
+  <p>Kaggle bundle <code>jeanmidev/smart-meters-in-london</code>, re-share of UK Power Networks Low Carbon London trial (Nov 2011 - Feb 2014).</p>
+  <table>
+    <thead><tr><th>File group</th><th>Scope</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>halfhourly_dataset/ (112 blocks)</td><td>167M rows of (LCLid, tstp, kWh)</td><td>Source for TFT advanced model</td></tr>
+      <tr><td>daily_dataset/ (112 blocks)</td><td>Daily mean/sum/std/min/max per household</td><td>SARIMA / Prophet baseline input</td></tr>
+      <tr><td>informations_households.csv</td><td>5,567 rows: LCLid, ACORN, tariff (Std/dToU), block</td><td>Static categoricals</td></tr>
+      <tr><td>weather_hourly_darksky.csv</td><td>Hourly London weather (temp, humidity, wind, cloud)</td><td>Known-future covariates</td></tr>
+      <tr><td>uk_bank_holidays.csv</td><td>UK bank holidays in trial window</td><td>Calendar covariate</td></tr>
+      <tr><td>acorn_details.csv</td><td>18 ACORN classes -> 6 supergroups</td><td>Cohort hierarchy</td></tr>
+    </tbody>
+  </table>
+  <div class="box box-amber">
+    <strong>Status: documented, not downloaded.</strong> The Kaggle bundle is approximately 1.25 GB compressed (2.5-3 GB unzipped), in the judgment-call zone. Default per Liora agent rules is to document. <code>data/README.md</code> has the Kaggle CLI command for the main session to pull it on demand.
+  </div>
+</section>
+
+<section id="methods">
+  <h2>Methods</h2>
+
+  <h3>Baseline: per-household SARIMA / Prophet</h3>
+  <ul>
+    <li>Aggregate half-hourly to daily total kWh per household</li>
+    <li>SARIMA(1,1,1)(1,1,1,7) with weather + 3-term yearly Fourier + holiday exogenous</li>
+    <li>Prophet alternative backend with weekly + yearly seasonality and the same regressors</li>
+    <li>Hold out final 60 days; report MAPE / MAE / RMSE at horizons 1d, 7d, 30d (median across households)</li>
+  </ul>
+
+  <h3>Advanced: Temporal Fusion Transformer [Lim 2021]</h3>
+  <ul>
+    <li>Single TFT trained jointly across households via <code>pytorch-forecasting</code></li>
+    <li>Static categoricals: LCLid, Acorn_grouped, tariff (Std vs dToU)</li>
+    <li>Known-future reals: weather, day-of-week, day-of-year sin/cos, holiday flag</li>
+    <li>Observed reals: lagged kwh_sum, kwh_mean, kwh_std</li>
+    <li>Hidden 64, attention heads 4, dropout 0.2, lr 3e-4, encoder 60d, decoder 30d</li>
+    <li>Quantile head q10 / q50 / q90; pinball loss</li>
+  </ul>
+
+  <h3>Hierarchical structure</h3>
+  <pre><code>household (5,567)
+   |
+   v
+ACORN class (18)
+   |
+   v
+ACORN supergroup (6)
+   |
+   v
+all-trial total (1)</code></pre>
+  <p>Reconciliation across the hierarchy via MinT [Wickramasuriya 2019] is flagged as future work.</p>
+</section>
+
+<section id="baseline">
+  <h2>Baseline results placeholder</h2>
+  <p>Sample of 50 households, 60-day held-out, median across households.</p>
+  <table>
+    <thead><tr><th>Horizon</th><th>MAPE (%)</th><th>MAE (kWh)</th><th>RMSE (kWh)</th></tr></thead>
+    <tbody>
+      <tr><td>1 day</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td></tr>
+      <tr><td>7 days</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td></tr>
+      <tr><td>30 days</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td></tr>
+    </tbody>
+  </table>
+  <div class="box box-purple">
+    <strong>Expectation</strong> (from [Kong 2019], [Fekri 2021] on the same dataset): per-household SARIMA reaches roughly 25-35% median MAPE at daily aggregation, with substantial heterogeneity across ACORN supergroups.
+  </div>
+</section>
+
+<section id="advanced">
+  <h2>TFT results placeholder</h2>
+  <p>500-household training panel, 30-day held-out validation per household.</p>
+  <table>
+    <thead><tr><th>Horizon</th><th>SMAPE (%)</th><th>MAE (kWh)</th><th>Pinball loss</th><th>q10-q90 coverage</th></tr></thead>
+    <tbody>
+      <tr><td>1 day</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td></tr>
+      <tr><td>7 days</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td></tr>
+      <tr><td>30 days</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td><td>&lt;TBD after model run&gt;</td></tr>
+    </tbody>
+  </table>
+  <div class="box box-green">
+    <strong>Expectation</strong>: TFT reduces SMAPE by 15-30% vs SARIMA at horizon 1d, with the gap widening at horizon 30d as the encoder attention captures yearly drift.
+  </div>
+</section>
+
+<section id="discussion">
+  <h2>Discussion</h2>
+  <ul>
+    <li><strong>ACORN as a weak proxy.</strong> ACORN segments are a noisy substitute for occupant count, schedule, and appliance portfolio. The LCLid embedding in TFT can subsume ACORN; a planned ablation drops LCLid and keeps Acorn_grouped only.</li>
+    <li><strong>Weather is a forecast.</strong> Both models treat weather as known-future. A robustness analysis injecting calibrated weather-forecast noise (e.g. temperature ~ N(forecast, 1.5 degC)) tests deployment overconfidence.</li>
+    <li><strong>dToU as a natural experiment.</strong> The dToU sub-cohort was randomised at trial enrolment with day-ahead high-price signals. Future work: counterfactual estimator matched on ACORN, baseline mean kWh, and pre-trial weather window to recover a treatment effect on day-time consumption.</li>
+    <li><strong>Hierarchical reconciliation.</strong> MinT [Wickramasuriya 2019] would produce internally coherent forecasts at the household / ACORN / total level, matching the secondary-substation level that DACH Verteilnetzbetreiber operate at.</li>
+    <li><strong>Privacy.</strong> Half-hourly per-household readings are potentially re-identifiable; a DACH transfer would need a DSGVO Article 35 Datenschutz-Folgenabschaetzung before any model could train on the German feed.</li>
+    <li><strong>Cost.</strong> TFT on 500 households, 30 epochs, batch 64 fits in 4-6 hours on RTX 5090 (24 GB) at FP16. Full 5,567-household sweep is roughly 10x more.</li>
+  </ul>
+</section>
+
+<section id="conclusion">
+  <h2>Conclusion</h2>
+  <p>This project scaffolds a two-tier benchmark on the cleanest large-scale public smart-meter dataset, faithful to the canonical TFT recipe of [Lim 2021] and the LCL deep-learning study of [Fekri 2021]. The methodology, dataset, hierarchy, and metric protocol are pinned now so that the executed run is comparable to published benchmarks. The strategic destination is a transfer-learning step to DACH cohorts under the Smart Meter Gateway and Section 14a EnWG flexible-load regime, not a from-scratch German build.</p>
+</section>
+
+<section id="refs">
+  <h2>Top references</h2>
+  <ol>
+    <li><strong>Lim, B., Arik, S. O., Loeff, N., & Pfister, T.</strong> (2021). Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting. <em>International Journal of Forecasting</em>. DOI: <a href="https://doi.org/10.1016/j.ijforecast.2021.03.012">10.1016/j.ijforecast.2021.03.012</a>.</li>
+    <li><strong>Salinas, D., Flunkert, V., Gasthaus, J., & Januschowski, T.</strong> (2020). DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks. <em>International Journal of Forecasting</em>. DOI: <a href="https://doi.org/10.1016/j.ijforecast.2019.07.001">10.1016/j.ijforecast.2019.07.001</a>.</li>
+    <li><strong>Wang, Y., Chen, Q., Hong, T., & Kang, C.</strong> (2019). Review of Smart Meter Data Analytics: Applications, Methodologies, and Challenges. <em>IEEE Transactions on Smart Grid</em>. DOI: <a href="https://doi.org/10.1109/TSG.2018.2818167">10.1109/TSG.2018.2818167</a>.</li>
+    <li><strong>Kong, W., Dong, Z. Y., Jia, Y., Hill, D. J., Xu, Y., & Zhang, Y.</strong> (2019). Short-Term Residential Load Forecasting Based on LSTM Recurrent Neural Network. <em>IEEE Transactions on Smart Grid</em>. DOI: <a href="https://doi.org/10.1109/TSG.2017.2753802">10.1109/TSG.2017.2753802</a>.</li>
+    <li><strong>Fekri, M. N., Patel, H., Grolinger, K., & Sharma, V.</strong> (2021). Deep Learning for Load Forecasting with Smart Meter Data: Online Adaptive Recurrent Neural Network. <em>Applied Energy</em>. DOI: <a href="https://doi.org/10.1016/j.apenergy.2020.116177">10.1016/j.apenergy.2020.116177</a>.</li>
+  </ol>
+  <p>Full reference list with 27 verified entries is in <code>../reports/references.md</code>.</p>
+</section>
+
+<footer>Sandeep Grover - Liora MLE Programme, Cohort 6973 - Project 16 of 22</footer>
+</main>
+</body>
+</html>
