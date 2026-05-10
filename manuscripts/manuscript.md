@@ -1,7 +1,7 @@
 # Multi-Horizon Probabilistic Forecasting of Household Electricity Consumption from London Smart-Meter Data: A Temporal Fusion Transformer Approach
 
 **Authors:** Sandeep Grover, Independent Research
-**Affiliation:** Independent researcher, Mossingen, Germany
+**Affiliation:** Independent researcher, Germany
 **Dataset:** Smart Meters in London (Kaggle: jeanmidev/smart-meters-in-london)
 **Project:** ML Engineering Portfolio
 **Date:** May 2026
