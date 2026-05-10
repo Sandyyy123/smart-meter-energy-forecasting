@@ -15,7 +15,7 @@ The Kaggle bundle is approximately 1.25 GB compressed (a few GB unzipped). This 
 Kaggle CLI auth is already at `~/.kaggle/kaggle.json` (project rule).
 
 ```bash
-# from /root/AI/project_root/data
+# from data/
 kaggle datasets download -d jeanmidev/smart-meters-in-london
 unzip -q smart-meters-in-london.zip
 rm smart-meters-in-london.zip
