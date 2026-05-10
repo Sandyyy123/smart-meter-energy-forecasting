@@ -12,7 +12,7 @@ Architecture choices follow Lim 2021 (DOI 10.1016/j.ijforecast.2021.03.012):
   - Hidden size 64, attention heads 4, dropout 0.2, learning rate 3e-4
   - Quantile regression head with quantiles {0.1, 0.5, 0.9}
 
-NOT executed by the scaffolding agent. Main session runs:
+NOT executed by the implementation agent. Main session runs:
     python src/model_advanced.py --max-households 500 --epochs 30
 
 Outputs:

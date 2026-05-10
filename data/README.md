@@ -8,14 +8,14 @@ Original collection: Low Carbon London Project (UK Power Networks, 2012-2014). T
 
 ## Status: not downloaded (judgment call)
 
-The Kaggle bundle is approximately 1.25 GB compressed (a few GB unzipped). This places it in the 500 MB - 2 GB judgment-call zone defined in the agent rules; default is to document only and have the main session pull it on demand. Phase 1 deliverables (model scripts, manuscript, presentation) reference the schema and cohort sizes from the dataset documentation, not from a local file.
+The Kaggle bundle is approximately 1.25 GB compressed (a few GB unzipped). This places it in the 500 MB - 2 GB judgment-call zone defined in the agent rules; default is to document only and have the main session pull it on demand. v1.0 deliverables (model scripts, manuscript, presentation) reference the schema and cohort sizes from the dataset documentation, not from a local file.
 
-## How to download (run from main session, not from this scaffolding agent)
+## How to download (run from main session, not from this implementation agent)
 
 Kaggle CLI auth is already at `~/.kaggle/kaggle.json` (project rule).
 
 ```bash
-# from /root/AI/liora_projects/16_smart_meters/data
+# from /root/AI/project_root/data
 kaggle datasets download -d jeanmidev/smart-meters-in-london
 unzip -q smart-meters-in-london.zip
 rm smart-meters-in-london.zip

@@ -1,6 +1,6 @@
 # References - Smart Meter Energy Forecasting
 
-Each entry below has been verified live against CrossRef (https://api.crossref.org/works/{doi}) or, for arXiv preprints, against Semantic Scholar (https://api.semanticscholar.org/graph/v1/paper/arXiv:{id}) at scaffolding time. Per project rule: author / title / journal / year / identifier kept; volume, issue, and page numbers omitted.
+Each entry below has been verified live against CrossRef (https://api.crossref.org/works/{doi}) or, for arXiv preprints, against Semantic Scholar (https://api.semanticscholar.org/graph/v1/paper/arXiv:{id}) at implementation time. Per project rule: author / title / journal / year / identifier kept; volume, issue, and page numbers omitted.
 
 ## A. Time series and multi-horizon forecasting methods
 

@@ -7,7 +7,7 @@ Aggregates half-hourly kWh to daily totals per household, fits a small SARIMA
 covariates (mean daily temperature, mean daily humidity), and produces 1-day,
 7-day, and 30-day forecasts for the held-out final 60 days of the trial.
 
-NOT executed by the scaffolding agent - run from main session via:
+NOT executed by the implementation agent - run from main session via:
     python src/model_baseline.py --max-households 50
 
 Outputs:
